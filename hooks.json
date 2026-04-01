@@ -11,30 +11,6 @@
           }
         ]
       }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/code/agent-tooling/hooks/post-tool-new-file-guard.sh",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/code/agent-tooling/hooks/pre-tool-dependency-guard.sh",
-            "timeout": 5
-          }
-        ]
-      }
     ]
   }
 }

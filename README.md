@@ -6,7 +6,7 @@ Shared Claude Code tooling for the team. Installs skills, conventions, and hooks
 
 - **Skills** — `/review-code`, `/review-security`, `/review-tests`, `/review-migration`, `/generate-pr`, `/generate-tests`, `/audit-routes`, `/handoff`, `/session-summary`
 - **CLAUDE.md** — Team conventions (code philosophy, architecture patterns, security rules) installed at `~/.claude/CLAUDE.md`, applying to all projects
-- **Hooks** — SessionStart update checker, new-file convention guard, dependency guard
+- **Hooks** — SessionStart update checker
 
 ## Install
 
@@ -41,4 +41,4 @@ Or: when you start a Claude Code session you'll see a notice if updates are avai
 
 To add or modify a skill, edit the relevant `skills/<name>/SKILL.md` file and open a PR. The skill will be distributed to the team on their next `agent-tooling update`.
 
-Keep skills focused: one skill, one job. If you're adding a new skill, document it in the table above.
+Keep skills focused: one skill, one job.

@@ -1,18 +1,21 @@
 ---
 name: review-security
-allowed-tools: Bash(git diff:*), Bash(git status:*), Bash(git log:*), Bash(git branch:*)
+allowed-tools: Bash(git diff:*), Bash(git status:*), Bash(git log:*), Bash(git branch:*), Bash(git symbolic-ref:*), Bash(git show-ref:*), Bash(git rev-parse:*)
 description: Security-focused code review — OWASP Top 10 + Laravel-specific vulnerabilities
 argument: Optional focus area or context (e.g., "focus on file upload handling")
 ---
 
-You're an experienced security engineer specialising in PHP/Laravel applications. Your task is to perform a focused security review of local changes compared to the master branch.
+You're an experienced security engineer specialising in PHP/Laravel applications. Your task is to perform a focused security review of local changes compared to the base branch.
 
 **Optional Focus**: If the user provided an argument, prioritise that area. Still check for critical issues everywhere, but give more detailed analysis to the focused area.
 
 Follow these steps exactly:
 
 1. Run `git branch --show-current` to detect the current branch name.
-2. Run `git diff master..${BRANCH_NAME} -- ':(exclude)composer.lock' ':(exclude)package-lock.json'` to see the changes.
+2. Detect the base branch:
+   - Run `git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||'` — uses the remote's configured default (most reliable).
+   - If that returns nothing: if on a `feature/*`, `bugfix/*`, or `release/*` branch and `develop` exists locally (`git show-ref --verify --quiet refs/heads/develop`), use `develop`. Otherwise check for `main` then `master`. Default to `main`.
+3. Run `git diff ${BASE_BRANCH}..${BRANCH_NAME} -- ':(exclude)composer.lock' ':(exclude)package-lock.json'` to see the changes.
 3. If there are no changes, stop and inform the user.
 4. Make a todo list of checks to perform.
 5. Scan the diff for the following vulnerabilities:

@@ -1,6 +1,6 @@
 ---
 name: review-tests
-allowed-tools: Bash(git diff:*), Bash(git branch:*), Bash(find:*), Bash(ls:*)
+allowed-tools: Bash(git diff:*), Bash(git branch:*), Bash(git symbolic-ref:*), Bash(git show-ref:*), Bash(find:*), Bash(ls:*)
 description: Review test coverage of changed code — identify untested paths and weak assertions
 ---
 
@@ -8,7 +8,7 @@ You're an experienced Laravel developer focused on test quality. Your task is to
 
 Follow these steps:
 
-1. Run `git branch --show-current` and `git diff master..${BRANCH_NAME} -- ':(exclude)composer.lock' ':(exclude)package-lock.json'` to get the changes.
+1. Run `git branch --show-current` to get the current branch. Detect the base branch: run `git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||'`; if empty, use `develop` for `feature/*`/`bugfix/*` branches (if `develop` exists), otherwise check for `main` then `master`. Then run `git diff ${BASE_BRANCH}..${BRANCH_NAME} -- ':(exclude)composer.lock' ':(exclude)package-lock.json'` to get the changes.
 2. If there are no changes, stop and inform the user.
 3. Make a todo list.
 4. Separate the changed files into two groups:

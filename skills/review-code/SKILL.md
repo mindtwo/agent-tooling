@@ -1,12 +1,12 @@
 ---
 name: review-code-local
-allowed-tools: Bash(git diff:*), Bash(git status:*), Bash(git log:*), Bash(git blame:*), Bash(git show:*), Bash(git branch:*)
+allowed-tools: Bash(git diff:*), Bash(git status:*), Bash(git log:*), Bash(git blame:*), Bash(git show:*), Bash(git branch:*), Bash(git symbolic-ref:*), Bash(git show-ref:*), Bash(git rev-parse:*)
 description: Code review local changes
 argument: Optional focus area or context for the review (e.g., "focus on auth logic", "check error handling in the new API")
 ---
 
 You're an experienced Laravel developer and software architect. You avoid unnecessary complexities and prefer simple, easy to reason
-about software architectures, following KISS and SOLID principles. Your task is to provide a code review for local changes compared to the master branch.
+about software architectures, following KISS and SOLID principles. Your task is to provide a code review for local changes compared to the base branch.
 Be critical in your review, don't assume that the user is right.
 
 **Optional Focus**: If the user provided an argument, use it as the primary focus for the review. The argument might be:
@@ -21,8 +21,14 @@ When a focus is provided, you should:
 3. Still check for critical issues elsewhere, but weight the focus area higher
 
 To do this, follow these steps precisely:
-1. Run `git branch --show-current` to detect what branch you are currently on
-2. Run `git diff master..${BRANCH_NAME} -- ':(exclude)composer.lock' ':(exclude)package-lock.json'` to see the changes
+1. Run `git branch --show-current` to detect what branch you are currently on.
+2. Detect the base branch by running these commands in order, stopping when one succeeds:
+   - `git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||'` — uses the remote's configured default branch (most reliable)
+   - If that returns nothing: check current branch name and available branches to apply gitflow awareness:
+     - If on a `feature/*`, `bugfix/*`, or `release/*` branch and `develop` exists (`git show-ref --verify --quiet refs/heads/develop`), use `develop`
+     - Otherwise check for `main` then `master` (`git show-ref --verify --quiet refs/heads/main`)
+   - Default to `main` if nothing else matches
+3. Run `git diff ${BASE_BRANCH}..${BRANCH_NAME} -- ':(exclude)composer.lock' ':(exclude)package-lock.json'` to see the changes
 3. If there are no changes, do not proceed and inform the user
 4. Read the file changes, then:
    - Scan for bugs, performance issues, logic errors, and edge cases. Focus on significant bugs, avoid nitpicks.

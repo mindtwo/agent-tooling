@@ -4,7 +4,7 @@ Shared Claude Code tooling for the team. Installs skills, conventions, and hooks
 
 ## What's included
 
-- **Skills** — `/review-code`, `/review-security`, `/review-tests`, `/review-migration`, `/generate-pr`, `/generate-tests`, `/audit-routes`, `/handoff`, `/session-summary`
+- **Skills** — `/review-code`, `/review-security`, `/review-tests`, `/generate-pr`, `/generate-tests`, `/handoff`, `/session-summary`
 - **CLAUDE.md** — Team conventions (code philosophy, architecture patterns, security rules) installed at `~/.claude/CLAUDE.md`, applying to all projects
 - **Hooks** — SessionStart update checker
 

@@ -260,9 +260,12 @@ cmd_status() {
     cd "$REPO_DIR"
 
     # Fetch at most once per day
-    local now fetch_ts=0
+    local now fetch_ts=0 _ts
     now="$(date +%s)"
-    [[ -f "$LAST_FETCH_FILE" ]] && fetch_ts="$(cat "$LAST_FETCH_FILE")"
+    if [[ -f "$LAST_FETCH_FILE" ]]; then
+        _ts="$(cat "$LAST_FETCH_FILE" 2>/dev/null)"
+        [[ "$_ts" =~ ^[0-9]+$ ]] && fetch_ts="$_ts"
+    fi
 
     if (( now - fetch_ts > 86400 )); then
         git fetch origin main --quiet 2>/dev/null || true

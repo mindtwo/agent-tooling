@@ -16,7 +16,10 @@ fi
 # Fetch at most once per day
 now="$(date +%s)"
 last_fetch=0
-[[ -f "$LAST_FETCH_FILE" ]] && last_fetch="$(cat "$LAST_FETCH_FILE" 2>/dev/null || echo 0)"
+if [[ -f "$LAST_FETCH_FILE" ]]; then
+    _ts="$(cat "$LAST_FETCH_FILE" 2>/dev/null)"
+    [[ "$_ts" =~ ^[0-9]+$ ]] && last_fetch="$_ts"
+fi
 
 if (( now - last_fetch > 86400 )); then
     git fetch origin main --quiet 2>/dev/null || true

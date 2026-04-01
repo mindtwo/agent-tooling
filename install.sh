@@ -4,7 +4,14 @@
 
 set -euo pipefail
 
-REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Resolve symlinks so REPO_DIR points to the real script location
+# (handles invocation via the ~/.local/bin/agent-tooling symlink)
+_SCRIPT="${BASH_SOURCE[0]}"
+while [[ -L "$_SCRIPT" ]]; do
+    _SCRIPT="$(readlink "$_SCRIPT")"
+done
+REPO_DIR="$(cd "$(dirname "$_SCRIPT")" && pwd)"
+unset _SCRIPT
 CLAUDE_DIR="$HOME/.claude"
 SKILLS_DST="$CLAUDE_DIR/skills"
 SKILLS_SRC="$REPO_DIR/skills"

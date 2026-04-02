@@ -7,6 +7,8 @@ argument: Optional focus area or context for the review (e.g., "focus on auth lo
 
 You're an experienced Laravel developer and software architect. Your task is to perform a thorough code review of all pending changes — committed on this branch and any uncommitted work in progress. Be critical and direct. The goal is to catch problems before they ship, not to validate the author. Do not flag security vulnerabilities — those are handled separately by `/review-security`.
 
+**Be especially hard on over-engineering.** In practice, new code sometimes introduces unnecessary abstractions, interfaces, services, base classes, and design patterns that the task simply did not require. A solution that is twice as long as it needs to be is a real problem, not a minor style concern. If you see complexity that wasn't justified by the requirements, call it out firmly.
+
 **Optional Focus**: If the user provided an argument, use it as the primary focus. Prioritise issues in that area and give more detailed analysis there, but still check for critical issues everywhere.
 
 ## Step 1: Gather context
@@ -34,12 +36,33 @@ Work through all four lenses. Be honest — an empty review is a red flag.
 - Are there performance implications: N+1 queries, unbounded loops, missing database indexes, unnecessary eager loading?
 - Could this break existing functionality or cause regressions in related features?
 
-### 2b. Solution quality
-- Is this the right approach for the problem, or is there a simpler, more idiomatic way?
-- Does it duplicate logic that already exists elsewhere in the codebase?
-- Are there unnecessary abstractions, over-engineering, or premature generalisations?
-- Is the change complete, or does it leave the codebase in a halfway state?
-- Would a different data structure, pattern, or Laravel feature make this cleaner?
+### 2b. Over-engineering and unnecessary complexity (YAGNI / KISS / DRY)
+
+This is a primary focus area. Ask yourself: did the task actually require this complexity?
+
+**Unnecessary abstractions**
+- A new interface, abstract class, or trait introduced with only one concrete implementation and no stated plan for more
+- A service class whose entire body is one or two Eloquent calls that could live directly in the controller or job
+- A DTO or value object used in exactly one place — a plain array or direct assignment would be clearer
+- A pipeline or multi-step class structure for what is effectively 3–4 lines of sequential code
+- Wrapper or adapter classes around framework functionality that add no behaviour
+- Helper or utility classes created for a single operation
+
+**Premature generalisation**
+- "Reusable" or "extensible" code designed for requirements that do not yet exist
+- Generic/configurable structures written for a use case that only occurs once
+- Config values, feature flags, or constants for things that have no realistic variation
+- Base classes or traits extracting shared logic between two classes that don't actually share the same concept
+
+**Doing more than was asked**
+- The implementation introduces new patterns, layers, or conventions beyond what the task required
+- Refactoring of surrounding code that wasn't part of the task
+- Side features or behaviours added that weren't in the requirements
+- Three or more similar items extracted into an abstraction when the original duplication was fine
+
+**Violations of DRY in both directions** — duplication is bad, but premature DRY is worse. Three similar-looking lines of code are often better than an abstraction that obscures what's actually happening.
+
+For each over-engineering issue found, consider: what is the simplest version of this code that correctly solves the problem? If the answer is significantly shorter or flatter than what was written, that gap is the issue.
 
 ### 2c. Completeness
 Are there related files that should have changed but didn't?
@@ -51,12 +74,12 @@ Are there related files that should have changed but didn't?
 - Config or environment variable added without updating `.env.example`
 - Translatable strings added without updating translation files
 
-### 2d. Code quality
-- Is the code clear and readable? Would a junior dev understand it in 30 seconds?
-- Are there unnecessary abstractions, excessive nesting, or redundant code?
+### 2d. Code clarity
+- Is the code readable without needing to trace through multiple layers? Would a junior dev understand it in 30 seconds?
 - Are variable and method names clear and consistent with the surrounding codebase?
 - Are there TODO/FIXME/HACK comments that should be resolved before merging?
-- Does it match the conventions of the surrounding code (not introducing new patterns into a legacy codebase)?
+- Does it match the conventions of the surrounding code (not introducing new patterns into an existing codebase)?
+- Methods split into sub-methods each called exactly once with no clarity gain — sometimes a longer method is simpler than artificial decomposition.
 
 ## Step 3: Score and filter
 
@@ -66,6 +89,11 @@ For each issue found, assign a confidence score (0–100):
 - 50: Real issue, but minor or unlikely to cause problems in practice
 - 75: Real issue that will likely be hit in practice and impacts quality or correctness
 - 100: Confirmed bug or significant problem — will definitely cause issues
+
+Over-engineering issues score based on severity of the added complexity:
+- A new class, interface, or abstraction with no immediate justification → 75 (Warning)
+- A minor unnecessary helper method or slight over-abstraction → 50–60 (Suggestion)
+- A substantial new layer, pattern, or architecture not required by the task → 80–90 (Warning)
 
 Filter out any issue scoring below 50.
 
@@ -94,7 +122,7 @@ Present findings in this format. Only include sections that have issues.
    Why it matters and suggested fix (with code snippet if helpful).
 
 **Warning** (N issues)
-> Should fix — likely to cause problems.
+> Should fix — includes significant over-engineering, logic issues, and important gaps.
 
 1. **file.php:15** — Brief description
 

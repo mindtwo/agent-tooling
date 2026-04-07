@@ -10,17 +10,27 @@ Shared Claude Code tooling for the team. Installs skills, conventions, and hooks
 
 ## Install
 
-```bash
-# Prerequisites: Claude Code, git, jq (brew install jq)
+### install.sh
 
-git clone git@github.com:your-org/agent-tooling.git ~/code/agent-tooling
+**Prerequisites:** Claude Code, git, jq (`brew install jq`)
+
+```bash
+git clone git@github.com:mindtwo/agent-tooling.git ~/code/agent-tooling
 cd ~/code/agent-tooling
 ./install.sh
 ```
 
-That's it. Skills are immediately available in any Claude Code session. Add `~/.local/bin` to your `PATH` for the `agent-tooling` command.
+Skills are immediately available in any Claude Code session. Add `~/.local/bin` to your `PATH` for the `agent-tooling` command.
 
-## Update
+### npx (via vercel-labs/skills)
+
+If you use [vercel-labs/skills](https://github.com/vercel-labs/skills) for cross-agent skill management:
+
+```bash
+npx skills add https://github.com/mindtwo/agent-tooling
+```
+
+## Update (install.sh only)
 
 ```bash
 agent-tooling update
@@ -28,7 +38,7 @@ agent-tooling update
 
 Or: when you start a Claude Code session you'll see a notice if updates are available.
 
-## Commands
+## Commands (install.sh only)
 
 | Command | Description |
 |---|---|

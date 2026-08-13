@@ -11,6 +11,18 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "ExitPlanMode|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/skills/clickup-plans/scripts/clickup-plan-hook.sh",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   }
 }

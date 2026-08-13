@@ -124,12 +124,19 @@ install_hooks() {
     existing_hooks="$(jq '.hooks // {}' "$SETTINGS")"
     new_hooks="$(jq '.hooks' "$HOOKS_SRC")"
 
-    # For each event in new_hooks, merge with existing by concatenating and deduplicating
-    # on the "command" field within each hook entry
+    # For each event, concatenate existing and new entries, then deduplicate on the
+    # "command" field within each hook entry.
+    #
+    # Concatenating per event matters: the deep merge "$existing * $new" REPLACES arrays
+    # instead of joining them, so any event we also ship would silently wipe a developer's
+    # own hooks for that event.
     merged="$(jq -n \
         --argjson existing "$existing_hooks" \
         --argjson new "$new_hooks" '
-        $existing * $new |
+        [($existing | keys), ($new | keys)] | flatten | unique as $events |
+        reduce $events[] as $event (
+            {}; .[$event] = (($existing[$event] // []) + ($new[$event] // []))
+        ) |
         with_entries(
             .value |= (
                 if type == "array" then

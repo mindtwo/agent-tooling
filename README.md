@@ -4,7 +4,7 @@ Shared Claude Code tooling for the team. Installs skills, conventions, and hooks
 
 ## What's included
 
-- **Skills** — `/review-code`, `/review-security`, `/generate-pr`, `/handoff`, `/session-summary`
+- **Skills** — `/review-code`, `/review-security`, `/generate-pr`, `/handoff`, `/session-summary`, plus `mindtwo-branding` (auto-activates when styling client- or team-facing deliverables such as Artifacts, reports, and PDF templates with the mindtwo corporate identity)
 - **CLAUDE.md** — Team conventions (code philosophy, architecture patterns, security rules) installed at `~/.claude/CLAUDE.md`, applying to all projects
 - **Hooks** — SessionStart update checker
 

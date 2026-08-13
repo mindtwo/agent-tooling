@@ -31,7 +31,7 @@ Run this setup when `@redocly/cli` is not present inside `package.json`.
 Add to `devDependencies` in `package.json`:
 
 ```json
-"@redocly/cli": "^2.20.4"
+"@redocly/cli": "^2.46.1"
 ```
 
 Add to the `scripts` block in `package.json`:

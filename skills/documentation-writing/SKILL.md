@@ -28,10 +28,10 @@ Run this setup when `astro.config.js` does not yet exist at the project root.
 Add to `devDependencies` in `package.json`:
 
 ```json
-"@astrojs/starlight": "^0.38.1",
-"astro": "^6.0.5",
-"astro-mermaid": "1.3.1",
-"starlight-llms-txt": "^0.8.0"
+"@astrojs/starlight": "^0.41.7",
+"astro": "^7.2.1",
+"astro-mermaid": "2.1.0",
+"starlight-llms-txt": "^0.11.0"
 ```
 
 Add to the `scripts` block in `package.json`:
@@ -45,7 +45,7 @@ Then run `npm install`.
 
 ### 2. Create `astro.config.js`
 
-Read `.claude/skills/doc-writing/astro.config.template.js` and copy it to `astro.config.js` at the project root. Then fill in the `TODO` values:
+Read `.claude/skills/documentation-writing/astro.config.template.js` and copy it to `astro.config.js` at the project root. Then fill in the `TODO` values:
 
 | Placeholder | What to set |
 |---|---|
@@ -56,7 +56,7 @@ Read `.claude/skills/doc-writing/astro.config.template.js` and copy it to `astro
 
 ### 3. Create content collection config
 
-Read `.claude/skills/doc-writing/content.config.template.ts` and copy it to `docs/src/content.config.ts`. No changes needed — it can be used as-is.
+Read `.claude/skills/documentation-writing/content.config.template.js` and copy it to `docs/src/content.config.ts`. No changes needed — it can be used as-is.
 
 ### 4. Directory structure
 
@@ -77,6 +77,15 @@ docs/
 ---
 
 ## Writing Documentation
+
+### Style
+
+Write concise, comprehensive, professional documentation aimed at technical readers:
+
+- Get to the point and use the correct technical terms. Include every detail needed for a thorough understanding of the topic — and nothing more; cut anything verbose or redundant.
+- Prefer high-level overviews over code snippets. Go into specifics only for interesting complexities or edge cases.
+- When a topic is genuinely complex, explain it thoroughly: provide examples wherever they help, and anticipate and answer the questions a reader would ask at that point.
+- Add an FAQ section only when it earns its place — for relevant questions that are neither obvious nor already covered by the page.
 
 ### File format
 

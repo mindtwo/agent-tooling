@@ -4,7 +4,8 @@ Produces `.claude/clickup-plans.json`. Run this when the file is missing, or whe
 should point somewhere else.
 
 **The container page has no required name.** It is whatever page plans should be nested
-under, chosen per project — `Schätzungen / 2026`, `Plans`, anything. Do not assume.
+under, chosen per project — `Plans`, `Konzepte`, `Specs / 2026`, anything, in any language.
+Do not assume, and do not propose a name before seeing the doc's existing pages.
 
 ## Steps
 
@@ -21,8 +22,8 @@ Accept either:
   `/{workspace}/v/dc/{doc_id}/{page_id}` — the **first** ID after `/docs/` or `/v/dc/` is
   the doc, the second is a page. A URL with only one ID gives you the doc alone.
 - **A name.** `clickup_search` with `filters.asset_types: ["doc"]`, narrowed by
-  `filters.location.categories` (folder IDs) when the client is known. Show the matches and
-  let the user pick.
+  `filters.location.categories` (folder IDs) when the project's space or folder is known. Show
+  the matches and let the user pick.
 
 ### 3. Pick the container page
 
@@ -36,43 +37,50 @@ containers — their content lives in sub-pages.
 ### 4. Resolve the conventions page
 
 List the doc's pages and ask which one holds the plan-format conventions. **Do not search
-for a fixed name** — a customer's doc may call it anything, in any language.
+for a fixed name** — a project's doc may call it anything, in any language.
 
 If there is none, show the seed from `page-format.md` (everything below the `SEED CONTENT`
 marker), ask for approval, then create it. Ask what to call it; `Konventionen` is a
 reasonable default for a German doc, `Conventions` for an English one.
+
+The seed is German and splits the two pages by audience and language. Before creating it, ask
+whether that fits this project — an English-speaking client, or a team that wants one language
+throughout, gets the seed translated or collapsed at this point. It is far cheaper to adapt
+here than after twenty plans have been rendered from it.
 
 Never skip this step. Every other workflow reads that page as the format contract, and
 `publish` cannot render without it.
 
 ### 5. Collect the repositories
 
-One binding usually covers **several repos** — a backend and its frontend both implement
-the same plan and publish into the same container.
+One binding often covers **several repos** — a backend and its frontend both implement the
+same plan and publish into the same container. A single-repo project is equally normal; do not
+invent a second entry.
 
 Repos are identified by **normalized git remote**, not directory name: directory names are
-arbitrary, customers live on different hosts, and a project name repeats across owners.
+arbitrary, projects live on different hosts, and a project name repeats across owners.
 Start from `git remote get-url origin` in the current repo and ask which others belong to
-the same customer.
+the same binding.
 
 ### 6. Ask for the spec page name
 
-What the developer-facing child page should be called. `Technical Specification` matches
-the existing docs; anything else is fine if the customer's doc differs.
+What the developer-facing child page should be called. `Technical Specification` is a
+reasonable default; anything else is fine, in any language, as long as it is recorded here —
+every other workflow resolves the child page by this name.
 
 ### 7. Write the config
 
 ```jsonc
 {
   "repos": [
-    { "remote": "github.com/vnrag/app-teach",           "name": "app-teach" },
-    { "remote": "gitlab.com/vnrag/app-teach-frontend",  "name": "app-teach-frontend" }
+    { "remote": "github.com/example-org/app-backend",  "name": "app-backend" },
+    { "remote": "gitlab.com/example-org/app-frontend", "name": "app-frontend" }
   ],
-  "doc_id": "wz35r-28695",
-  "container_page_id": "wz35r-118815",
-  "conventions_page_id": "wz35r-140015",
+  "doc_id": "abc12-28695",
+  "container_page_id": "abc12-118815",
+  "conventions_page_id": "abc12-140015",
   "spec_page_name": "Technical Specification",
-  "label": "VNR – Schätzungen / 2026"
+  "label": "Example Client – Plans / 2026"
 }
 ```
 
@@ -89,8 +97,8 @@ wrong — fix it before finishing.
 Print the doc and container URLs, then tell the user what still needs committing:
 
 - `.claude/clickup-plans.json` — the binding must be identical for everyone. Because it is
-  committed and lists every repo of the customer, it can be copied verbatim into their other
-  repos; the guard refuses it anywhere else.
+  committed and lists every repo the binding covers, it can be copied verbatim into those
+  sibling repos; the guard refuses it anywhere else.
 - `.gitignore` — needs `!.claude/clickup-plans.json` in the `.claude/*` allowlist, otherwise
   the binding is not shared and the skill works only for whoever set it up.
 

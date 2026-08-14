@@ -6,10 +6,10 @@ set -uo pipefail
 #
 # The failure this prevents: the skill is installed globally and therefore live in every
 # repo, while .claude/clickup-plans.json is committed per repo and gets copied by hand.
-# Copied between a customer's own repos that is correct; copied to a different customer it
-# would publish one customer's plans into another's document, silently. Repos are identified
-# by normalized git remote because directory names are arbitrary and collide across
-# customers.
+# Copied between the sibling repos one binding lists that is correct; copied to an unrelated
+# project it would publish one project's plans into another's document, silently. Repos are
+# identified by normalized git remote because directory names are arbitrary and collide across
+# projects.
 #
 # Usage:  skills/clickup-plans/scripts/clickup-plan-guard.test.sh
 
@@ -44,42 +44,42 @@ expect() {
     fi
 }
 
-VNR='{"repos":[{"remote":"github.com/vnrag/app-teach","name":"app-teach"},{"remote":"gitlab.com/vnrag/app-teach-frontend","name":"app-teach-frontend"}],"doc_id":"d","container_page_id":"c","conventions_page_id":"k","label":"VNR"}'
+BINDING='{"repos":[{"remote":"github.com/example-org/app-backend","name":"app-backend"},{"remote":"gitlab.com/example-org/app-frontend","name":"app-frontend"}],"doc_id":"d","container_page_id":"c","conventions_page_id":"k","label":"Example Client"}'
 
 printf 'clickup-plan-guard\n'
 
 # 1. SSH form of a bound remote passes and reports the human-readable repo name.
-expect 'ssh remote in the list passes and prints its name' '0|app-teach|' \
-    "$(run_guard 'git@github.com:vnrag/app-teach.git' "$VNR")"
+expect 'ssh remote in the list passes and prints its name' '0|app-backend|' \
+    "$(run_guard 'git@github.com:example-org/app-backend.git' "$BINDING")"
 
 # 2. Same repo cloned over HTTPS must normalize to the same identity.
-expect 'https remote normalizes to the same identity' '0|app-teach|' \
-    "$(run_guard 'https://github.com/vnrag/app-teach.git' "$VNR")"
+expect 'https remote normalizes to the same identity' '0|app-backend|' \
+    "$(run_guard 'https://github.com/example-org/app-backend.git' "$BINDING")"
 
 # 3. Without the .git suffix, still the same repo.
-expect 'missing .git suffix still matches' '0|app-teach|' \
-    "$(run_guard 'https://github.com/vnrag/app-teach' "$VNR")"
+expect 'missing .git suffix still matches' '0|app-backend|' \
+    "$(run_guard 'https://github.com/example-org/app-backend' "$BINDING")"
 
-# 4. A second repo of the SAME customer, on a different host, is legitimately covered.
-expect 'a sibling repo on another host passes' '0|app-teach-frontend|' \
-    "$(run_guard 'git@gitlab.com:vnrag/app-teach-frontend.git' "$VNR")"
+# 4. A second repo under the SAME binding, on a different host, is legitimately covered.
+expect 'a sibling repo on another host passes' '0|app-frontend|' \
+    "$(run_guard 'git@gitlab.com:example-org/app-frontend.git' "$BINDING")"
 
-# 5. THE case that matters: another customer's repo must be refused.
-got="$(run_guard 'git@github.com:tempton/app-jet.git' "$VNR")"
-expect 'a different customer is refused with exit 1' '1|' "$got"
-expect 'refusal names the binding so the cause is obvious' 'VNR' "$got"
+# 5. THE case that matters: an unrelated project's repo must be refused.
+got="$(run_guard 'git@github.com:other-org/other-app.git' "$BINDING")"
+expect 'an unrelated project is refused with exit 1' '1|' "$got"
+expect 'refusal names the binding so the cause is obvious' 'Example Client' "$got"
 
 # 6. Same project name under a different owner is a different repo.
 expect 'same project name, different owner, is refused' '1|' \
-    "$(run_guard 'git@github.com:someoneelse/app-teach.git' "$VNR")"
+    "$(run_guard 'git@github.com:other-org/app-backend.git' "$BINDING")"
 
 # 7. No binding yet — distinct exit code so the caller can route to setup.
 expect 'missing config exits 2' '2|' \
-    "$(run_guard 'git@github.com:vnrag/app-teach.git' '')"
+    "$(run_guard 'git@github.com:example-org/app-backend.git' '')"
 
 # 8. No git remote — cannot establish identity, so refuse rather than guess.
 expect 'missing git remote exits 3' '3|' \
-    "$(run_guard '' "$VNR")"
+    "$(run_guard '' "$BINDING")"
 
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [[ $fail -eq 0 ]]

@@ -8,8 +8,10 @@ Reads the replies, works out which answer belongs to which question, and resumes
 
 Take the ticket from the session, or as an argument when this runs in a later session.
 
-`clickup_get_task_comments`, then find the comment opening with
-**`Rückfragen zur Umsetzung`**.
+`clickup_get_task_comments`, then find the comment opening with one of the headings from the
+table in `ask.md` — `Rückfragen zur Umsetzung`, `Implementation questions`. Check every heading
+in the table, not just the one you would have written: the comment may come from an earlier
+session on a ticket in another language.
 
 If several exist, take the **most recent one with unanswered questions** and say which you
 picked — a ticket can accumulate rounds, and silently reading the wrong round produces answers
@@ -26,15 +28,15 @@ back.
 
 ### 3. Match answers to questions, then confirm
 
-Replies are freeform. `"1b, bei 2 würde ich sagen offen lassen"` has to become an answer to
+Replies are freeform. `"1b, bei 2 würde ich die Zeile überspringen"` has to become an answer to
 question 1 and an answer to question 2.
 
 **Show the mapping and ask the user to confirm it.** Do not proceed on a parse.
 
 ```
-Nina antwortete:
-  1 → b) pro Kapitel
-  2 → bleiben offen ("würde ich sagen offen lassen")
+⟨Name⟩ antwortete:
+  1 → b) nur neue Datensätze
+  2 → b) Zeile überspringen ("würde ich die Zeile überspringen")
   3 → keine Antwort
 
 Stimmt diese Zuordnung?
@@ -58,11 +60,12 @@ Never silently assume an answer to an unanswered question.
 
 ### 5. Close the loop
 
-Post a short reply in the thread saying what was taken:
+Post a short reply in the thread, in the language of the question comment, saying what was
+taken:
 
 ```markdown
-Danke! Übernommen: Drip pro Kapitel (1), freigeschaltete Kapitel bleiben bei Abmeldung
-offen (2). Frage 3 ist noch offen.
+Danke! Übernommen: Import legt nur neue Datensätze an (1), ungültige Zeilen werden
+übersprungen und protokolliert (2). Frage 3 ist noch offen.
 ```
 
 Same preview-and-approve gate as `ask`. This costs one line and means the colleague can see

@@ -43,8 +43,8 @@ Report, in plain terms:
 - what it **does not** — the specific decisions someone will have to make to plan this
 - anything the comments already answered that the description does not
 
-Be concrete. "Scope is unclear" is useless; "the ticket says chapters unlock over time but not
-whether the clock starts at enrolment or at course start" is a question someone can answer.
+Be concrete. "Scope is unclear" is useless; "the ticket asks for a CSV import but does not say
+whether an existing record should be overwritten or skipped" is a question someone can answer.
 
 ### 5. Activate the session rule
 

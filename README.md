@@ -17,8 +17,8 @@ ticket author as one comment.
 
 Both are installed globally — a repo opts in with a single committed
 `.claude/clickup-plans.json`, written by the skill's `setup` workflow. A guard script
-refuses to publish from any repo the binding does not list, so a config copied to the wrong
-customer fails loudly instead of writing into their document.
+refuses to publish from any repo the binding does not list, so a config copied into an
+unrelated project fails loudly instead of writing into someone else's document.
 
 Skill-local shell scripts live in `skills/clickup-plans/scripts/`. Their tests are plain
 bash and run standalone:

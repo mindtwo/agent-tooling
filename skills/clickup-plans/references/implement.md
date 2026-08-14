@@ -18,9 +18,9 @@ If the user named a plan, match it. Otherwise show the live list — the status 
 back in the listing, so it doubles as a status overview:
 
 ```
-🟡 PX-Learning – Content Drip
-🟢 SFW – Tenant Theming
-✅ Frisbii Auth
+🟡 Rechnungsexport
+🟢 Rollen & Rechte
+✅ SSO-Login
 ```
 
 ### 2. Read both pages
@@ -40,13 +40,13 @@ repo for this work.
 
 Three things, all **before** the first edit:
 
-- **`Open Questions` / `Offene Fragen ans Produkt`.** Surface every open item and get
-  answers. These are blockers by construction; discovering them halfway through is how
-  rework happens.
+- **The open-questions section on either page** (the seed calls them `Offene Fragen ans
+  Produkt` and `Open Questions`). Surface every open item and get answers. These are blockers
+  by construction; discovering them halfway through is how rework happens.
 - **Status still at the first row of the conventions status table** (not yet reviewed). Warn
   that nobody has reviewed this yet and ask whether to proceed anyway. Proceeding is a
   legitimate choice — doing it unknowingly is not.
-- **A `Design` line reading `—`.** Flag it before any frontend work starts.
+- **A `Design` line with no link yet.** Flag it before any frontend work starts.
 
 ### 4. Implement
 
@@ -63,7 +63,7 @@ As each PR opens, append its link to the parent's `PRs` line, **labelled with th
 the guard printed**:
 
 ```markdown
-**PRs:** app-teach [#2094](…), app-teach-frontend [#312](…)
+**PRs:** app-backend [#2094](…), app-frontend [#312](…)
 ```
 
 The label is what keeps the trail readable when a plan spans repos — the backend often ships
@@ -80,7 +80,7 @@ earlier link loses the trail.
 
 When the work is merged, move to the **final row** of the conventions status table:
 
-1. Parent header → that row's parent label; `**Aktualisiert:**` refreshed.
+1. Parent header → that row's parent label; the last-updated line refreshed.
 2. Parent page name → that row's emoji, replacing the previous prefix.
 3. Child header → that row's child label.
 

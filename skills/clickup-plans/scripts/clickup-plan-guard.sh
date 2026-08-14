@@ -6,14 +6,14 @@ set -uo pipefail
 #
 # Why this exists: the skill is installed globally, so it is live in every repo, while
 # .claude/clickup-plans.json is committed per repo and gets copied around by hand. Copied
-# between one customer's own repos that is correct and intended. Copied to a different
-# customer it would publish this project's plans into another customer's document, with no
-# error and no obvious symptom.
+# between the sibling repos one binding lists that is correct and intended. Copied to an
+# unrelated project it would publish this project's plans into someone else's document, with
+# no error and no obvious symptom.
 #
 # Repos are identified by NORMALIZED GIT REMOTE, not directory name: directory names are
-# arbitrary, and "app-teach" under a different owner is a different repository. Customers
-# also live on different hosts (github.com/a/x, gitlab.com/b/y), so the host is part of the
-# identity.
+# arbitrary, and the same project name under a different owner is a different repository.
+# Projects also live on different hosts (github.com/a/x, gitlab.com/b/y), so the host is part
+# of the identity.
 #
 # Exit codes:
 #   0  covered      — stdout is the repo's display name
@@ -42,9 +42,9 @@ if [[ -z "$remote" ]]; then
 fi
 
 # Normalize every remote spelling of the same repo to host/owner/project:
-#   git@github.com:vnrag/app-teach.git      -> github.com/vnrag/app-teach
-#   https://user@github.com/vnrag/app-teach -> github.com/vnrag/app-teach
-#   ssh://git@gitlab.com:22/a/b.git         -> gitlab.com/a/b
+#   git@github.com:acme/app.git              -> github.com/acme/app
+#   https://user@github.com/acme/app         -> github.com/acme/app
+#   ssh://git@gitlab.com:22/a/b.git          -> gitlab.com/a/b
 normalize_remote() {
     printf '%s' "$1" |
         sed -E \
@@ -64,7 +64,7 @@ label="$(jq -r '.label // "this binding"' "$config" 2>/dev/null)" || {
     exit 4
 }
 
-# Config entries are normalized too, so a hand-written "https://github.com/vnrag/x.git"
+# Config entries are normalized too, so a hand-written "https://github.com/acme/x.git"
 # still matches a remote recorded in ssh form.
 name=""
 while IFS=$'\t' read -r entry_remote entry_name; do
@@ -79,8 +79,8 @@ if [[ -z "$name" ]]; then
     echo "clickup-plans: this repository is not covered by the ClickUp binding." >&2
     echo "  repository: $current" >&2
     echo "  binding:    $label" >&2
-    echo "Refusing to write — publishing here would put this project's plans into another" >&2
-    echo "customer's document. Run the setup workflow to bind this repository." >&2
+    echo "Refusing to write — publishing here would put this repository's plans into another" >&2
+    echo "project's document. Run the setup workflow to bind this repository." >&2
     exit 1
 fi
 

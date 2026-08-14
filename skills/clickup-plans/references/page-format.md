@@ -1,19 +1,25 @@
 # Page format — seed
 
-**This file is not the contract.** The contract is the live `Konventionen` page in the
-bound ClickUp doc (`conventions_page_id`). Read that before rendering anything.
+**This file is not the contract.** The contract is the live conventions page in the bound
+ClickUp doc (`conventions_page_id`). Read that before rendering anything.
 
-This file exists for one purpose: `setup` copies the block below verbatim into a new
-`Konventionen` page when a project has none. That resolves the chicken-and-egg without
-leaving a second authority in place. Once the page exists, this file is dead weight —
-if the two ever disagree, the live page wins.
+This file exists for one purpose: `setup` copies the block below into a new conventions page
+when a project has none. That resolves the chicken-and-egg without leaving a second authority
+in place. Once the page exists, this file is dead weight — if the two ever disagree, the live
+page wins.
 
 The Claude desktop chat app ships no seed at all. If the page is missing there, it stops
 and directs the user to run `setup` from Claude Code.
 
+**The seed is a starting point, not a standard.** It is written in German because most of our
+docs are, and it splits the two pages by audience and language. A project is free to use one
+language throughout, rename every section, or restructure the header — that is what editing
+the live page is for. Translate the seed at `setup` time if the project's doc is
+English-speaking; do not translate it here.
+
 ---
 
-## SEED CONTENT — copy everything below this line
+## SEED CONTENT — copy everything below this line, adapting language and names to the project
 
 # Konventionen für Plan-Seiten
 
@@ -26,7 +32,7 @@ Code und Claude Desktop vor jedem Schreibvorgang gelesen. **Änderungen an diese
 Ein Plan besteht aus zwei Seiten:
 
 ```
-🟡 PX-Learning – Content Drip          DE · Product Owner, Stakeholder
+🟡 ⟨Plantitel⟩                         DE · Product Owner, Stakeholder
   └─ Technical Specification           EN · Entwickler:innen
 ```
 
@@ -55,11 +61,11 @@ Header als fette Schlüssel-Wert-Zeilen, **keine Tabelle**:
 ```markdown
 **Status:** 🟡 Review ausstehend
 **Zielgruppe:** Product Owner, Stakeholder
-**Repositories:** app-teach, app-teach-frontend
+**Repositories:** app-backend, app-frontend
 **Ticket:** [CU-5678](https://app.clickup.com/t/5678)
 **Design:** — _(Link folgt)_
 **PRs:** —
-**Aktualisiert:** 2026-08-11 · Andreas Schneider
+**Aktualisiert:** 2026-08-11 · ⟨Name⟩
 ```
 
 ### `Ticket`-Zeile
@@ -75,6 +81,9 @@ Plan-Seite verweist. Wer im Ticket arbeitet, findet die Spezifikation dadurch oh
 gehören zum selben Plan und zur selben Seite. Wird nur eines genannt, ist die Hälfte der
 Arbeit unsichtbar. `—`, solange der Plan noch keinem Repository zugeordnet ist (z. B. bei
 einem Plan aus Claude Desktop).
+
+Die Namen sind die Anzeigenamen aus der Projektbindung (`.claude/clickup-plans.json`), nicht
+Verzeichnisnamen.
 
 Abschnitte in dieser Reihenfolge:
 
@@ -129,7 +138,7 @@ mehr lesbar, sobald Backend und Frontend zu unterschiedlichen Zeitpunkten ausgel
 werden — und die Nummernkreise verschiedener Hosts überschneiden sich ohnehin.
 
 ```markdown
-**PRs:** app-teach [#2094](…), app-teach-frontend [#312](…)
+**PRs:** app-backend [#2094](…), app-frontend [#312](…)
 ```
 
 Der Status wechselt erst auf ✅ `Umgesetzt`, wenn **alle** unter `Repositories` genannten
@@ -139,8 +148,8 @@ Repositories ausgeliefert sind.
 
 ```markdown
 **Status:** Draft for review
-**Related:** [PX-Learning – Content Drip](…)
-**Author:** schneider@mindtwo.de
+**Related:** [⟨Plantitel⟩](…)
+**Author:** ⟨name@example.com⟩
 **Date:** 2026-08-11
 ```
 
@@ -167,8 +176,8 @@ verloren. Rückmeldungen deshalb bitte als Listenpunkt direkt in den Abschnitt s
 ## Feedback
 > Feedback bitte als Listenpunkt mit Namen eintragen. Inline-Kommentare an der Seite
 > können nicht verarbeitet werden.
-- [ ] [Anna] Abschnitt 3: Drip-Intervall sollte pro Kurs einstellbar sein
-- [x] [Ben] Was passiert bei Abmeldung? → in §5.3 ergänzt
+- [ ] [⟨Name⟩] Abschnitt 3: Der Import sollte pro Mandant konfigurierbar sein
+- [x] [⟨Name⟩] Was passiert bei einem Abbruch mitten im Import? → in §5.3 ergänzt
 ```
 
 Offene Punkte stehen auf `- [ ]`. Sobald ein Punkt eingearbeitet ist, wird er auf `- [x]`

@@ -20,11 +20,13 @@ Once `start` binds a ticket, **every clarification question put to the user carr
 option**:
 
 ```
-Q: Should drip apply per course or per chapter?
-   1) per course
-   2) per chapter
-   3) Ask Nina on the ticket        <- always present, alongside the real answers
+Q: Should the import overwrite existing records, or only add new ones?
+   1) overwrite
+   2) only add new
+   3) Ask ⟨name⟩ on the ticket      <- always present, alongside the real answers
 ```
+
+`⟨name⟩` is the person `start` resolved as the ticket's owner.
 
 This is the skill. The three workflows below are the machinery it needs.
 
@@ -45,9 +47,11 @@ most likely way this skill fails.
 
 **Nothing is posted to a ticket without showing the full draft and getting approval.**
 
-Ticket comments notify a colleague and become part of a shared record. Draft in German,
-matter-of-fact. At the preview gate the user may drop questions, trim options and rewrite
-wording freely — **except the heading**, which `pull` depends on to find the comment again.
+Ticket comments notify a colleague and become part of a shared record. Draft matter-of-fact,
+**in the language the ticket is written in** — take it from the description and existing
+comments rather than defaulting to German or English. At the preview gate the user may drop
+questions, trim options and rewrite wording freely — **except the heading**, which `pull`
+depends on to find the comment again.
 
 ## Red flags — stop
 

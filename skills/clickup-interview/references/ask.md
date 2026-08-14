@@ -17,18 +17,29 @@ need to answer is worse than no question, because it costs their attention for n
 
 ### 2. Draft the comment
 
-Fixed heading, then stably numbered questions:
+Write in the **ticket's own language** — the one the description and existing comments use.
+Matter-of-fact, and short: this is a request for someone's time.
+
+The first line is a fixed heading from this table, in that same language. `pull` searches for
+these exact strings, so pick one verbatim rather than inventing a wording:
+
+| Language | Heading |
+|---|---|
+| German | `**Rückfragen zur Umsetzung**` |
+| English | `**Implementation questions**` |
+
+Then stably numbered questions:
 
 ```markdown
 **Rückfragen zur Umsetzung**
 
-1. Gilt Drip pro Kurs oder pro Kapitel?
-   a) pro Kurs   b) pro Kapitel
-   _Warum: bestimmt, ob Autor:innen 30 oder 5 Einstellungen pflegen._
+1. Soll der Import Bestandsdaten überschreiben oder nur neue Datensätze anlegen?
+   a) überschreiben   b) nur neue
+   _Warum: entscheidet, ob wir eine Vorschau vor dem Schreiben brauchen._
 
-2. Was passiert mit bereits freigeschalteten Kapiteln bei Abmeldung?
-   a) bleiben offen   b) werden gesperrt
-   _Warum: entscheidet, ob wir den Fortschritt beim Re-Enrollment aufheben müssen._
+2. Was passiert mit Zeilen, die die Validierung nicht bestehen?
+   a) Import abbrechen   b) Zeile überspringen und protokollieren
+   _Warum: bestimmt, ob ein Teil-Import ein gültiger Endzustand ist._
 ```
 
 Three things per question, all required:
@@ -37,14 +48,14 @@ Three things per question, all required:
 - **Candidate options** where they exist. `1b` is far faster to answer than a paragraph, and
   it forces you to have thought the question through. Omit them only where the answer is
   genuinely open.
-- **One line of why it matters.** The reader has none of your planning context. "Should drip
-  apply per chapter?" reads very differently to someone who has not just spent an hour in the
-  evaluator, and without the *why* they cannot tell a detail from a fork in the road.
-
-Write in German, matter-of-fact. Keep it short — this is a request for someone's time.
+- **One line of why it matters.** The reader has none of your planning context. A question that
+  reads as a detail to them may be the fork the whole plan rests on, and without the *why* they
+  cannot tell which it is.
 
 **The heading is load-bearing.** `pull` finds this comment again by that exact string. It is
-not decoration and must not be edited away.
+not decoration and must not be edited away or translated ad hoc. If the ticket's language is
+not in the table, add a row there in the same commit as the first use — `ask` and `pull` must
+never disagree about what to look for.
 
 ### 3. Preview gate
 
@@ -86,6 +97,7 @@ plan are now waiting on answers. Then continue with everything that is not block
 | One comment per question | Fragmented thread, several notifications, late answers |
 | Posting without the preview gate | An unreviewed question sits in a colleague's inbox |
 | Omitting the *why* line | The reader cannot judge how much the answer matters |
-| Editing away the heading | `pull` can never find the comment again |
+| Editing or improvising the heading | `pull` can never find the comment again |
+| Writing in your language instead of the ticket's | The reader has to translate a request for their time |
 | Renumbering between drafts | Replies reference numbers that no longer mean the same thing |
 | Sending questions planning already answered | Costs a colleague's attention for nothing |

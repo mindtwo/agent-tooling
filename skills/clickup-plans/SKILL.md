@@ -38,8 +38,8 @@ Read exactly one. The workflows are self-contained and never call each other.
    | 3 | no `origin` remote | stop; identity cannot be established |
    | 4 | jq missing / bad JSON | stop and report |
 
-   Repos are identified by **normalized git remote**, not directory name — customers live on
-   different hosts and project names repeat across owners. One binding covers several repos
+   Repos are identified by **normalized git remote**, not directory name — projects live on
+   different hosts and project names repeat across owners. One binding can cover several repos
    (a backend and its frontend), which is why exit 0 is normal in each of them.
 
 2. **Read `.claude/clickup-plans.json`** for `doc_id`, `container_page_id`,
@@ -54,6 +54,10 @@ Read exactly one. The workflows are self-contained and never call each other.
 Nothing in this skill hardcodes a page name or a status label. The conventions page supplies
 the status vocabulary and the page structure; the config supplies `spec_page_name`. A doc in
 another language, or with a different structure, works without editing the skill.
+
+Where a workflow file names a section — `Feedback`, `Bewusste Nicht-Ziele`, `Open Questions` —
+it is quoting **the seed** so the instruction is readable, not stating a requirement. Match
+sections by their role on the live page, and use that page's wording when you write.
 
 ## The one rule
 
@@ -83,8 +87,8 @@ entire page**. Colleague feedback lives on those pages. So:
 ## Constraints worth knowing
 
 - **Doc-page comments are invisible.** `clickup_create_comment` accepts `task`, `list`,
-  `view` — not doc pages. Feedback only reaches you if reviewers write list items in the
-  `Feedback` / `Review Feedback` sections. That is why those sections carry an instruction
-  line; keep it.
+  `view` — not doc pages. Feedback only reaches you if reviewers write list items into the
+  feedback section of the page itself. That is why those sections carry an instruction line;
+  keep it, in whatever wording the conventions page uses.
 - **The Claude desktop chat app** publishes the parent page only — it has no codebase, so it
   cannot write a technical spec page. If a parent exists without a child, that is why.

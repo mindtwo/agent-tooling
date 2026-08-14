@@ -39,8 +39,10 @@ ignoring the status emoji prefix.
 
 ### 4. Frontend and the design link
 
-Scan the plan for frontend involvement: `resources/js`, Blade, Inertia, Livewire, Tailwind,
-Vue, "component", "UI", "player", "editor".
+Scan the plan for frontend involvement. Look for the markers this project actually uses —
+view and asset paths (`resources/views`, `resources/js`, `src/`), template and framework names
+(Blade, Inertia, Livewire, Vue, React, Tailwind), and words describing something a user sees
+("component", "screen", "form", "UI").
 
 **Ask; do not conclude.** Report what you found — "this mentions Inertia pages and Tailwind
 classes, so I read it as frontend-touching" — and let the user confirm. A wrong yes leaves a
@@ -50,7 +52,7 @@ If it is frontend, offer three choices:
 
 1. paste an existing URL — Figma, a claude.ai/design project, or a published Artifact
 2. generate a mockup now as a published Artifact and link it
-3. leave `— _(Link folgt)_`
+3. leave the placeholder the conventions page prescribes for a pending link
 
 If it is not frontend, **omit the `Design` line entirely.**
 
@@ -72,7 +74,9 @@ consumes it belongs to both, and naming only one hides half the work. Ask if it 
 Fill `Ticket` if the plan came from one — the conversation usually knows, otherwise ask. No
 ticket → omit the line entirely.
 
-Fill `Aktualisiert` with today's date and the git user name (`git config user.name`).
+Fill the header's last-updated line with today's date and the git user name
+(`git config user.name`). Use whatever that line is called on the conventions page; the seed
+calls it `Aktualisiert`.
 
 ### 6. Show it and wait
 
@@ -105,10 +109,11 @@ Only when a `Ticket` was set, and **only on the create path** — a plan is publ
 re-publishing an update must not notify the ticket again.
 
 Post **one** comment on the task with `clickup_create_comment`, `entity_type: "task"`, linking
-the plan page. Show the draft first, like any other write:
+the plan page. Write it in the ticket's own language, and show the draft first, like any other
+write:
 
 ```markdown
-Spezifikation veröffentlicht: [PX-Learning – Content Drip](https://app.clickup.com/…)
+Spezifikation veröffentlicht: [⟨Plantitel⟩](https://app.clickup.com/…)
 ```
 
 **Never create a task.** If the plan has no ticket, there is nothing to link — do not invent
@@ -129,4 +134,4 @@ Print both page URLs, and the ticket link if one was set.
 | Matching a similar title without asking | Overwrites the wrong spec |
 | Writing status labels from memory | Silently overrides the conventions page the skill claims to follow |
 | Listing only the current repo in `Repositories` | Half the plan's work becomes invisible |
-| Mixing up the two audiences' languages | Wrong audience for both pages |
+| Using a language or section name the conventions page does not | The doc stops being uniform, and readers stop trusting the structure |

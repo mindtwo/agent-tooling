@@ -28,21 +28,25 @@ Run this setup when `@redocly/cli` is not present inside `package.json`.
 
 ### 1. Install packages
 
-Add to `devDependencies` in `package.json`:
+Install the current release as a dev dependency — let npm resolve the version instead of hand-writing one into `package.json`:
 
-```json
-"@redocly/cli": "^2.46.1"
+```bash
+npm install --save-dev @redocly/cli
 ```
 
-Add to the `scripts` block in `package.json`:
+Respect the project's existing setup:
+
+- If a `yarn.lock`, `pnpm-lock.yaml`, or `bun.lockb` is present, use that package manager's equivalent instead of npm.
+- Leave `.npmrc` (registries, scopes, auth) untouched and never delete or regenerate the lockfile.
+- Commit the resulting `package.json` and lockfile changes together.
+
+Then add to the `scripts` block in `package.json`:
 
 ```json
 "lint:api-docs": "redocly lint",
 "build:api-docs": "redocly bundle",
 "preview:api-docs": "redocly build-docs docs/api/spec.yaml --output public/docs/api/index.html"
 ```
-
-Then run `npm install`.
 
 ### 2. Create `redocly.yaml`
 

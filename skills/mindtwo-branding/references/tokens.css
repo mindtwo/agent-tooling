@@ -1,0 +1,233 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   mindtwo corporate identity — design tokens
+   Source of truth: mindtwo repo → resources/assets/css/mindtwo.css (@theme),
+   resources/views/global/pdf/markdown-document.blade.php,
+   resources/prompts/blog-featured-image.txt
+
+   Paste the @font-face + :root blocks into the artifact, then run
+   references/inline-assets.py to replace __ROOBERT_VF__ with the font data URI.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@font-face {
+    font-family: 'Roobert';
+    src: url('__ROOBERT_VF__') format('woff2-variations');
+    font-weight: 300 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    /* ── brand constants — identical in both themes ── */
+    --m2-red: #de0639;
+    --m2-red-dark: #9c182e;
+    --m2-red-light: #ff6470;
+    --m2-black: #121212;
+    --m2-white: #ffffff;
+
+    /* ── surfaces & ink (light) ── */
+    --ground: #ffffff;
+    --surface: #f9fafb;
+    --surface-2: #f3f4f6;
+    --ink: #111827;
+    --ink-body: #374151;
+    --ink-muted: #6b7280;
+    --ink-faint: #9ca3af;
+    --rule: #e5e7eb;
+    --rule-strong: #d1d5db;
+
+    /* ── accent — the 10% of 60/30/10 ── */
+    --accent: var(--m2-red);
+    --accent-ink: #ffffff;
+
+    /* ── semantic callouts ── */
+    --note: #3b82f6;    --note-bg: #eff6ff;    --note-ink: #1d4ed8;
+    --tip: #10b981;     --tip-bg: #ecfdf5;     --tip-ink: #047857;
+    --caution: #f59e0b; --caution-bg: #fffbeb; --caution-ink: #b45309;
+    --danger: #ef4444;  --danger-bg: #fef2f2;  --danger-ink: #b91c1c;
+
+    /* ── type ── */
+    --font-brand: 'Roobert', Arial, 'Helvetica Neue', sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+    /* Licence-safe fallback: use as --font-brand when Roobert cannot be embedded.
+       Arial is the substitute the Brand Guide mandates (p. 21).
+       --font-brand: Arial, 'Helvetica Neue', sans-serif; */
+
+    /* ── geometry — sharp, per the form language ── */
+    --radius: 2px;
+    --radius-lg: 4px;
+    --rule-w: 1px;
+    --accent-bar: 3px;
+
+    /* ── flat, single-light-source elevation ── */
+    --shadow: 0 1px 2px rgba(18, 18, 18, .06), 0 8px 24px -18px rgba(18, 18, 18, .24);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --ground: #121212;
+        --surface: #1a1a1a;
+        --surface-2: #232323;
+        --ink: #ffffff;
+        --ink-body: #d1d5db;
+        --ink-muted: #9ca3af;
+        --ink-faint: #6b7280;
+        --rule: #2a2a2a;
+        --rule-strong: #3a3a3a;
+
+        /* red lifts to the CI light variant so it holds contrast on #121212 */
+        --accent: var(--m2-red-light);
+        --accent-ink: #121212;
+
+        --note-bg: #12233d;    --note-ink: #93b8fb;
+        --tip-bg: #0e2a20;     --tip-ink: #6ee7b7;
+        --caution-bg: #2b2010; --caution-ink: #fcd34d;
+        --danger-bg: #2d1416;  --danger-ink: #fca5a5;
+
+        --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 8px 24px -18px rgba(0, 0, 0, .8);
+    }
+}
+
+:root[data-theme="dark"] {
+    --ground: #121212;
+    --surface: #1a1a1a;
+    --surface-2: #232323;
+    --ink: #ffffff;
+    --ink-body: #d1d5db;
+    --ink-muted: #9ca3af;
+    --ink-faint: #6b7280;
+    --rule: #2a2a2a;
+    --rule-strong: #3a3a3a;
+
+    --accent: var(--m2-red-light);
+    --accent-ink: #121212;
+
+    --note-bg: #12233d;    --note-ink: #93b8fb;
+    --tip-bg: #0e2a20;     --tip-ink: #6ee7b7;
+    --caution-bg: #2b2010; --caution-ink: #fcd34d;
+    --danger-bg: #2d1416;  --danger-ink: #fca5a5;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 8px 24px -18px rgba(0, 0, 0, .8);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Signature patterns, ported from the Markdown→PDF template.
+   Copy the ones the deliverable actually uses; delete the rest.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+body {
+    background: var(--ground);
+    color: var(--ink-body);
+    font-family: var(--font-brand);
+    line-height: 1.6;
+}
+
+/* The primary red moment. Most pages need exactly one of these per section. */
+.eyebrow {
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-left: 8px;
+    border-left: var(--accent-bar) solid var(--accent);
+}
+
+.doc-title {
+    font-weight: 600;
+    letter-spacing: -.03em;
+    line-height: 1.15;
+    color: var(--ink);
+    text-wrap: balance;
+}
+
+h2 {
+    font-weight: 600;
+    letter-spacing: -.02em;
+    line-height: 1.25;
+    color: var(--ink);
+    padding-bottom: .4rem;
+    border-bottom: var(--rule-w) solid var(--rule);
+    text-wrap: balance;
+}
+
+h3 { font-weight: 600; color: var(--ink); }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+blockquote {
+    border-left: var(--accent-bar) solid var(--accent);
+    background: var(--surface);
+    padding: .75rem 1rem;
+    font-style: italic;
+}
+
+code {
+    font-family: var(--font-mono);
+    font-size: .88em;
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    padding: 1px 5px;
+}
+
+pre {
+    background: #1a1a1a;
+    color: #e5e7eb;
+    padding: 1rem;
+    border-radius: var(--radius);
+    overflow-x: auto;
+}
+pre code { background: none; padding: 0; color: inherit; }
+
+.table-wrap { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; }
+thead th {
+    background: var(--surface-2);
+    color: var(--ink);
+    font-weight: 600;
+    text-align: left;
+    padding: .5rem .65rem;
+    border-bottom: 2px solid var(--rule-strong);
+}
+tbody td {
+    padding: .4rem .65rem;
+    border-bottom: var(--rule-w) solid var(--rule);
+    color: var(--ink-body);
+    vertical-align: top;
+    font-variant-numeric: tabular-nums;
+}
+tbody tr:last-child td { border-bottom: none; }
+
+.callout {
+    border-left: var(--accent-bar) solid;
+    border-radius: var(--radius);
+    padding: .8rem 1rem;
+}
+.callout > .callout-title {
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: .4rem;
+}
+.callout-note    { border-color: var(--note);    background: var(--note-bg); }
+.callout-note    > .callout-title { color: var(--note-ink); }
+.callout-tip     { border-color: var(--tip);     background: var(--tip-bg); }
+.callout-tip     > .callout-title { color: var(--tip-ink); }
+.callout-caution { border-color: var(--caution); background: var(--caution-bg); }
+.callout-caution > .callout-title { color: var(--caution-ink); }
+.callout-danger  { border-color: var(--danger);  background: var(--danger-bg); }
+.callout-danger  > .callout-title { color: var(--danger-ink); }
+
+/* Screen equivalent of the PDF's 4.5pt red top bar. */
+.brand-bar {
+    height: 4px;
+    background: var(--m2-red);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

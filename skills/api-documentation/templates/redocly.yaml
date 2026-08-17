@@ -1,0 +1,13 @@
+apis:
+  main:
+    root: docs/api/spec.yaml
+
+extends:
+  - recommended
+
+rules:
+  no-unused-components: error
+  operation-operationId: error
+  operation-summary: error
+  paths-kebab-case: warn
+  tag-description: warn

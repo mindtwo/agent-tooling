@@ -56,8 +56,10 @@ See Open questions.
 - mindtwo White: HEX `#FFFFFF` · RGB 255/255/255 · CMYK 0/0/0/0 (p. 14).
 - Distribute colour by the 60:30:10 rule. Light scheme: 60% White / 30% Black / 10% Red.
   Dark scheme: 60% Black / 30% White / 10% Red (p. 15).
-- Treat 60:30:10 as a rough visual guideline, not an exact ratio — the guide states
-  flexibility is intended (p. 15). Red remains the 10% accent in both schemes.
+- Treat 60:30:10 as a rough visual guideline for the share of area, not an exact ratio —
+  the guide states flexibility is intended (p. 15). Red remains the smallest share in both
+  schemes; red surfaces such as buttons or sections count towards it (design-team decision,
+  see SKILL.md).
 - Derive red tints and shades only by lightening/darkening `#DE0639` or by reducing its
   opacity over white or black (p. 16). Do not introduce any other red; the guide fixes no
   hex values for the variants — its scale is explicitly exemplary ("beispielhaft") (p. 16).
@@ -164,5 +166,5 @@ See Open questions.
 - The red-variant scale (p. 16) defines no hex values. The production variants
   `#9C182E` / `#FF6470` referenced in SKILL.md come from the mindtwo repo, not from this
   PDF.
-- SKILL.md calls the 60/30/10 rule "binding", while the guide explicitly calls it a rough
-  guideline that need not be met exactly (p. 15).
+- The guide defines no grey ramp and no semantic colours. The design team settled on the
+  Tailwind CSS v4 defaults; see "Design-team decisions" in SKILL.md.

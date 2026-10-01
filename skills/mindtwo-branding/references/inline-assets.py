@@ -12,10 +12,10 @@ Placeholders it replaces, wherever they appear in the file:
     __ROOBERT_VF__      variable-font data URI (woff2, weight axis 300-900)
     __ROOBERT_REGULAR__ static 400 data URI, if a variable font is not viable
     __ROOBERT_SEMIBOLD__ static 600 data URI
-    __LOGO_SVG__        horizontal logo, wordmark switched to currentColor so it
-                        works on both themes; the mark stays mindtwo Red
-    __LOGO_SVG_BRAND__  horizontal logo verbatim (white wordmark, red mark) —
-                        for dark grounds only
+    __LOGO_SVG__        horizontal logo, "mind" switched to currentColor so it
+                        works on both themes; "two" and the symbol stay mindtwo Red
+    __LOGO_SVG_BRAND__  horizontal logo verbatim ("mind" white, "two" and symbol
+                        red) — for dark grounds only
 
 Running it twice is safe: placeholders are gone after the first pass, so the
 second is a no-op. Substitution happens in place.
@@ -33,6 +33,7 @@ def find_brand_repo() -> pathlib.Path:
         return pathlib.Path(env).expanduser()
     home = pathlib.Path.home()
     candidates = [
+        home / "Sites/mindtwo",
         home / "Development/Projects/mindtwo",
         home / "code/mindtwo",
         home / "Projects/mindtwo",
@@ -62,7 +63,7 @@ def font_data_uri(path: pathlib.Path) -> str:
 def logo_svg(theme_aware: bool) -> str:
     svg = LOGO.read_text(encoding="utf-8").strip()
     if theme_aware:
-        # The wordmark paths are filled #fff; the mark is mindtwo Red and stays.
+        # Only "mind" is filled #fff; "two" and the symbol are mindtwo Red and stay.
         svg = svg.replace('fill="#fff"', 'fill="currentColor"')
     return svg
 

@@ -74,7 +74,7 @@ Settled by the design team where the Brand Guide is silent or deliberately overr
 |---|---|
 | Heading colour | Titles, headings, and anything else that would be black use mindtwo Black `#121212` — never pure `#000`. On `#121212` they are `#FFFFFF`. |
 | Neutrals | The official Tailwind CSS v4 grey ramp — the same defaults the `mindtwo` website uses (Tailwind 4.3). Not the older v3 values still hard-coded in the PDF template. |
-| Dark-theme surfaces | `#1A1A1A` / `#232323` surfaces and `#2A2A2A` / `#3A3A3A` rules on `#121212`. |
+| Dark-theme surfaces | `#1A1A1A` / `#232323` surfaces and `#2A2A2A` / `#3A3A3A` rules on `#121212`. Cards and code blocks share `#232323` so they stand off the ground. |
 | Callouts | Four semantic variants (note, tip, caution, danger) in Tailwind v4 blue, emerald, amber, red. |
 | Corner radius | `0`. Pill tags are the only fully rounded element. |
 | 60 / 30 / 10 | A guideline for the share of area, as in the guide. Red fills (buttons, sections) are fine within that share. |
@@ -147,7 +147,9 @@ These come from the PDF template, with colours updated to the decisions above:
 - **Blockquote** — `3px` red left border on `#F9FAFB`, italic.
 - **Tables** — `#F3F4F6` header cells, `2px solid #D1D5DC` under the head, `1px solid #E5E7EB`
   between rows, no border on the last row, left-aligned headers, top-aligned cells.
-- **Code** — inline on `#F3F4F6`; blocks on `#1A1A1A` with `#E5E7EB` text.
+- **Code** — inline on `#F3F4F6`; blocks on `#1A1A1A` with `#E5E7EB` text (dark theme: `#232323`).
+- **Cards** — `#F9FAFB` fill, `1px` rule border, radius 0, flat shadow; in the dark theme `#232323`,
+  the same surface as code blocks. Use them to set off an element, not on every block.
 - **Callouts** — four semantic variants, `3px` left border + tinted background (Tailwind v4,
   border 500 / background 50 / title 700):
   note `#2B7FFF` / `#EFF6FF` / `#1447E6` · tip `#00BC7D` / `#ECFDF5` / `#007A55` ·

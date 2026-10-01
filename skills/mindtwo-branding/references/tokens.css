@@ -36,6 +36,11 @@
     --rule: #e5e7eb;        /* gray-200 */
     --rule-strong: #d1d5dc; /* gray-300 */
 
+    /* ── raised elements — cards and code blocks share one surface in dark ── */
+    --card-bg: #f9fafb;     /* gray-50 */
+    --code-bg: #1a1a1a;
+    --code-ink: #e5e7eb;
+
     /* ── accent — the 10% of 60/30/10 (highlights and red surfaces alike) ── */
     --accent: var(--m2-red);
     --accent-ink: #ffffff;
@@ -76,6 +81,8 @@
         --ink-faint: #6a7282;
         --rule: #2a2a2a;
         --rule-strong: #3a3a3a;
+        --card-bg: #232323;
+        --code-bg: #232323;
 
         /* red lifts to the CI light variant so it holds contrast on #121212 */
         --accent: var(--m2-red-light);
@@ -101,6 +108,8 @@
     --ink-faint: #6a7282;
     --rule: #2a2a2a;
     --rule-strong: #3a3a3a;
+    --card-bg: #232323;
+    --code-bg: #232323;
 
     --accent: var(--m2-red-light);
     --accent-ink: #121212;
@@ -171,6 +180,15 @@ a:hover { text-decoration: underline; }
     text-decoration: none;
 }
 
+/* Set off one element by role — not every block needs a card. */
+.card {
+    background: var(--card-bg);
+    border: var(--rule-w) solid var(--rule);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+}
+
 /* The one exception to radius 0. */
 .tag {
     display: inline-block;
@@ -197,8 +215,8 @@ code {
 }
 
 pre {
-    background: #1a1a1a;
-    color: #e5e7eb;
+    background: var(--code-bg);
+    color: var(--code-ink);
     padding: 1rem;
     border-radius: var(--radius);
     overflow-x: auto;

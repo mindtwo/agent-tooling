@@ -1,0 +1,275 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   mindtwo corporate identity — design tokens
+   Rules: Brand Guide + design-team decisions in SKILL.md.
+   Assets and template metrics: mindtwo repo → resources/assets/css/mindtwo.css
+   (@theme), resources/views/global/pdf/markdown-document.blade.php.
+   Neutrals and callouts: Tailwind CSS v4 defaults (sRGB hex of the oklch values).
+
+   Paste the @font-face + :root blocks into the artifact, then run
+   references/inline-assets.py to replace __ROOBERT_VF__ with the font data URI.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@font-face {
+    font-family: 'Roobert';
+    src: url('__ROOBERT_VF__') format('woff2-variations');
+    font-weight: 300 700; /* documented cuts only: 300 / 400 / 600 / 700 */
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    /* ── brand constants — identical in both themes ── */
+    --m2-red: #de0639;
+    --m2-red-dark: #9c182e;
+    --m2-red-light: #ff6470;
+    --m2-black: #121212;
+    --m2-white: #ffffff;
+
+    /* ── surfaces & ink (light) — Tailwind v4 grey ramp ── */
+    --ground: #ffffff;
+    --surface: #f9fafb;     /* gray-50 */
+    --surface-2: #f3f4f6;   /* gray-100 */
+    --ink: #121212;         /* headings — mindtwo Black, never pure #000 */
+    --ink-body: #364153;    /* gray-700 */
+    --ink-muted: #6a7282;   /* gray-500 */
+    --ink-faint: #99a1af;   /* gray-400 */
+    --rule: #e5e7eb;        /* gray-200 */
+    --rule-strong: #d1d5dc; /* gray-300 */
+
+    /* ── raised elements — cards and code blocks share one surface in dark ── */
+    --card-bg: #f9fafb;     /* gray-50 */
+    --code-bg: #1a1a1a;
+    --code-ink: #e5e7eb;
+
+    /* ── accent — the 10% of 60/30/10 (highlights and red surfaces alike) ── */
+    --accent: var(--m2-red);
+    --accent-ink: #ffffff;
+
+    /* ── semantic callouts — Tailwind v4: border 500 / background 50 / title 700 ── */
+    --note: #2b7fff;    --note-bg: #eff6ff;    --note-ink: #1447e6;
+    --tip: #00bc7d;     --tip-bg: #ecfdf5;     --tip-ink: #007a55;
+    --caution: #fe9a00; --caution-bg: #fffbeb; --caution-ink: #bb4d00;
+    --danger: #fb2c36;  --danger-bg: #fef2f2;  --danger-ink: #c10007;
+
+    /* ── type ── */
+    --font-brand: 'Roobert', Arial, 'Helvetica Neue', sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+    /* Licence-safe fallback: use as --font-brand when Roobert cannot be embedded.
+       Arial is the substitute the Brand Guide mandates (p. 21).
+       --font-brand: Arial, 'Helvetica Neue', sans-serif; */
+
+    /* ── geometry — sharp corners; pill tags are the only rounded element ── */
+    --radius: 0;
+    --radius-pill: 9999px;
+    --rule-w: 1px;
+    --accent-bar: 3px;
+
+    /* ── flat, single-light-source elevation ── */
+    --shadow: 0 1px 2px rgba(18, 18, 18, .06), 0 8px 24px -18px rgba(18, 18, 18, .24);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --ground: #121212;
+        --surface: #1a1a1a;
+        --surface-2: #232323;
+        --ink: #ffffff;
+        --ink-body: #d1d5dc;
+        --ink-muted: #99a1af;
+        --ink-faint: #6a7282;
+        --rule: #2a2a2a;
+        --rule-strong: #3a3a3a;
+        --card-bg: #232323;
+        --code-bg: #232323;
+
+        /* red lifts to the CI light variant so it holds contrast on #121212 */
+        --accent: var(--m2-red-light);
+        --accent-ink: #121212;
+
+        --note-bg: #12233d;    --note-ink: #8ec5ff;
+        --tip-bg: #0e2a20;     --tip-ink: #5ee9b5;
+        --caution-bg: #2b2010; --caution-ink: #ffd230;
+        --danger-bg: #2d1416;  --danger-ink: #ffa2a2;
+
+        --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 8px 24px -18px rgba(0, 0, 0, .8);
+    }
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --ground: #121212;
+    --surface: #1a1a1a;
+    --surface-2: #232323;
+    --ink: #ffffff;
+    --ink-body: #d1d5dc;
+    --ink-muted: #99a1af;
+    --ink-faint: #6a7282;
+    --rule: #2a2a2a;
+    --rule-strong: #3a3a3a;
+    --card-bg: #232323;
+    --code-bg: #232323;
+
+    --accent: var(--m2-red-light);
+    --accent-ink: #121212;
+
+    --note-bg: #12233d;    --note-ink: #8ec5ff;
+    --tip-bg: #0e2a20;     --tip-ink: #5ee9b5;
+    --caution-bg: #2b2010; --caution-ink: #ffd230;
+    --danger-bg: #2d1416;  --danger-ink: #ffa2a2;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 8px 24px -18px rgba(0, 0, 0, .8);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Signature patterns, ported from the Markdown→PDF template.
+   Copy the ones the deliverable actually uses; delete the rest.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+body {
+    background: var(--ground);
+    color: var(--ink-body);
+    font-family: var(--font-brand);
+    line-height: 1.6;
+}
+
+/* The primary red moment. Most pages need exactly one of these per section. */
+.eyebrow {
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-left: 8px;
+    border-left: var(--accent-bar) solid var(--accent);
+}
+
+.doc-title {
+    font-weight: 600;
+    letter-spacing: -.03em;
+    line-height: 1.15;
+    color: var(--ink);
+    text-wrap: balance;
+}
+
+h2 {
+    font-weight: 600;
+    letter-spacing: -.02em;
+    line-height: 1.25;
+    color: var(--ink);
+    padding-bottom: .4rem;
+    border-bottom: var(--rule-w) solid var(--rule);
+    text-wrap: balance;
+}
+
+h3 { font-weight: 600; color: var(--ink); }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Red surfaces count towards the 10% share — fine as buttons or a section. */
+.button {
+    display: inline-block;
+    background: var(--m2-red);
+    color: #ffffff;
+    font-weight: 600;
+    padding: .6rem 1.1rem;
+    border-radius: var(--radius);
+    text-decoration: none;
+}
+
+/* Set off one element by role — not every block needs a card. */
+.card {
+    background: var(--card-bg);
+    border: var(--rule-w) solid var(--rule);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+}
+
+/* The one exception to radius 0. */
+.tag {
+    display: inline-block;
+    font-size: .8rem;
+    padding: .15rem .6rem;
+    border-radius: var(--radius-pill);
+    background: var(--surface-2);
+    color: var(--ink-body);
+}
+
+blockquote {
+    border-left: var(--accent-bar) solid var(--accent);
+    background: var(--surface);
+    padding: .75rem 1rem;
+    font-style: italic;
+}
+
+code {
+    font-family: var(--font-mono);
+    font-size: .88em;
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    padding: 1px 5px;
+}
+
+pre {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 1rem;
+    border-radius: var(--radius);
+    overflow-x: auto;
+}
+pre code { background: none; padding: 0; color: inherit; }
+
+.table-wrap { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; }
+thead th {
+    background: var(--surface-2);
+    color: var(--ink);
+    font-weight: 600;
+    text-align: left;
+    padding: .5rem .65rem;
+    border-bottom: 2px solid var(--rule-strong);
+}
+tbody td {
+    padding: .4rem .65rem;
+    border-bottom: var(--rule-w) solid var(--rule);
+    color: var(--ink-body);
+    vertical-align: top;
+    font-variant-numeric: tabular-nums;
+}
+tbody tr:last-child td { border-bottom: none; }
+
+.callout {
+    border-left: var(--accent-bar) solid;
+    border-radius: var(--radius);
+    padding: .8rem 1rem;
+}
+.callout > .callout-title {
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: .4rem;
+}
+.callout-note    { border-color: var(--note);    background: var(--note-bg); }
+.callout-note    > .callout-title { color: var(--note-ink); }
+.callout-tip     { border-color: var(--tip);     background: var(--tip-bg); }
+.callout-tip     > .callout-title { color: var(--tip-ink); }
+.callout-caution { border-color: var(--caution); background: var(--caution-bg); }
+.callout-caution > .callout-title { color: var(--caution-ink); }
+.callout-danger  { border-color: var(--danger);  background: var(--danger-bg); }
+.callout-danger  > .callout-title { color: var(--danger-ink); }
+
+/* Screen equivalent of the PDF's 4.5pt red top bar. */
+.brand-bar {
+    height: 4px;
+    background: var(--m2-red);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

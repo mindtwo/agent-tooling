@@ -41,8 +41,8 @@ Colour
   measure — but red stays the smallest share.
 - Red surfaces are allowed: buttons, a red section or band, a highlighted card. What matters
   is the overall proportion of red area to black and white, not whether red appears as a fill.
-- The ground is #FFFFFF (light) or #121212 (dark) — never pure #000 as a ground, never an
-  invented near-black.
+- The ground is #FFFFFF (light) or #121212 (dark) — never pure #000 (neither as a
+  ground nor as text), never an invented near-black.
 
 Type
 - Roobert only, in the four documented cuts: Light 300 / Regular 400 / Semibold 600 /
@@ -72,7 +72,7 @@ Settled by the design team where the Brand Guide is silent or deliberately overr
 
 | Topic | Decision |
 |---|---|
-| Heading colour | Titles and headings on white are `#000`. On `#121212` they are `#FFFFFF`. |
+| Heading colour | Titles, headings, and anything else that would be black use mindtwo Black `#121212` — never pure `#000`. On `#121212` they are `#FFFFFF`. |
 | Neutrals | The official Tailwind CSS v4 grey ramp — the same defaults the `mindtwo` website uses (Tailwind 4.3). Not the older v3 values still hard-coded in the PDF template. |
 | Dark-theme surfaces | `#1A1A1A` / `#232323` surfaces and `#2A2A2A` / `#3A3A3A` rules on `#121212`. |
 | Callouts | Four semantic variants (note, tip, caution, danger) in Tailwind v4 blue, emerald, amber, red. |
@@ -104,7 +104,7 @@ ground of a document or report.
 Neutrals are the official Tailwind CSS v4 grey ramp — do not invent new ones:
 
 ```
-#000000 headings (light)   #364153 body (gray-700)       #6A7282 muted (gray-500)
+#121212 headings (light)   #364153 body (gray-700)       #6A7282 muted (gray-500)
 #99A1AF faint (gray-400)   #D1D5DC rule-strong (gray-300) #E5E7EB rule (gray-200)
 #F3F4F6 surface-2 (gray-100) #F9FAFB surface (gray-50)
 ```
@@ -138,8 +138,8 @@ These come from the PDF template, with colours updated to the decisions above:
 
 - **Eyebrow** — uppercase, ~0.75rem, `letter-spacing: .1em`, weight 600, red, with a `3px` red
   left border and ~8px padding. This is the primary red moment on most pages.
-- **Title** — weight 600, `letter-spacing: -.03em`, `line-height: 1.15`, in `#000` on light.
-- **h2** — weight 600, `-.02em`, `#000` on light, with a `1px solid #E5E7EB` bottom rule and padding
+- **Title** — weight 600, `letter-spacing: -.03em`, `line-height: 1.15`, in `#121212` on light.
+- **h2** — weight 600, `-.02em`, `#121212` on light, with a `1px solid #E5E7EB` bottom rule and padding
   beneath.
 - **Links** — red, `text-decoration: none`.
 - **Buttons** — red fill `#DE0639`, white text, radius 0.
@@ -213,7 +213,7 @@ document is its own task, never a side effect of an edit.
 - [ ] Client-facing copy uses Sie; Du appears only in employer-branding content; never mixed
 - [ ] Tagline, if present, reads exactly "Build. Accelerate. Scale."
 - [ ] Red is the smallest share of area (~10%); red buttons or sections are fine, a predominantly red page is not (Red Stage imagery excepted)
-- [ ] Ground is #FFFFFF or #121212; headings #000 on white; no neutrals outside the Tailwind v4 grey ramp and the documented dark surfaces
+- [ ] Ground is #FFFFFF or #121212; headings and black text #121212, never #000; no neutrals outside the Tailwind v4 grey ramp and the documented dark surfaces
 - [ ] All text is Roobert (or the sanctioned fallback) in the four documented cuts; headings at 600; no bold body text
 - [ ] No justified, right-aligned, or all-caps text anywhere
 - [ ] Logo unmodified; clear space ≥ the wordmark's "m"; minimum height respected (50/78/32px)

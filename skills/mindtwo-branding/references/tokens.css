@@ -29,7 +29,7 @@
     --ground: #ffffff;
     --surface: #f9fafb;     /* gray-50 */
     --surface-2: #f3f4f6;   /* gray-100 */
-    --ink: #000000;         /* headings on white — design-team decision */
+    --ink: #121212;         /* headings — mindtwo Black, never pure #000 */
     --ink-body: #364153;    /* gray-700 */
     --ink-muted: #6a7282;   /* gray-500 */
     --ink-faint: #99a1af;   /* gray-400 */

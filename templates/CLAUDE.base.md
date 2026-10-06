@@ -34,7 +34,10 @@ alwaysApply: true
 - **YAGNI**: Do not build features, abstractions, or flexibility that is not needed right now.
 - **SOLID**: Single responsibility — a class has one reason to change.
 - **Low abstraction**: Prefer explicit over clever. One level of indirection is fine, two is suspicious, three needs justification.
+- **Extraction checklist**: When an extraction is asked for, only extract a shared utility/DTO if the duplication is more than ~5 lines, there are 2+ real callers, and the abstraction doesn't force a worse data flow (e.g. loading everything into memory instead of streaming).
 - **Avoid magic**: No implicit model binding, global scopes, or dynamic relationships when explicit code would be clearer.
+- **Trust internal data**: No defensive fallbacks for developer-controlled data (config, settings rows, seeded platforms, hard-coded registries). Reserve validation and fallbacks for real userland boundaries — request input, uploads, third-party API responses, webhooks.
+- **Prevent errors in UX, not error messages**: For conflicts users hit in normal flow, disable the affordance in the frontend rather than surfacing a backend 422. Keep the backend validation as the safety net.
 
 ---
 
@@ -43,7 +46,7 @@ alwaysApply: true
 - Create base classes, interfaces, abstractions, or DTOs unless explicitly asked.
 - Refactor existing code unless asked — stay focused on the task.
 - Add dependencies (`composer require`, `npm install`) without explicit developer approval.
-- Add docblocks or comments that describe what the code does. Comment only _why_, and only when it isn't obvious.
+- Add docblocks or comments that describe what the code does. Comment only _why_, and only when it isn't obvious. Never write a comment that only makes sense relative to the current diff (e.g. referencing removed code) — that context belongs in the commit message.
 - Over-engineer. A 10-line solution beats a 50-line "clean" one. Three similar lines are better than a premature abstraction.
 - Use `env()` anywhere except config files.
 
@@ -68,6 +71,7 @@ These rules apply to every project regardless of age or architecture.
 
 - Branch naming: `feature/short-description`, `fix/short-description`, `chore/short-description`
 - Commit messages: imperative mood, under 72 characters, describe _why_ not _what_
+- Never invent the _why_: if the motivation for a change wasn't stated, ask — or describe only what changed. Plausible-sounding guesses misrepresent intent in the permanent history.
 - One logical change per commit
 
 ---
@@ -78,6 +82,20 @@ Before opening a PR, run `/review-code` and `/review-security`. Ensure all tests
 
 ---
 
+## Refactoring & Migrations (Always Apply)
+
+- **Never silently drop API fields.** When rewriting a resource or endpoint, compare the new shape field-by-field against the legacy response before removing anything — frontends may depend on fields that look redundant. When in doubt, ask.
+- **Verify output parity on dependency swaps.** Before replacing one package with another, read the relevant source of both and map every emitted field/behavior. Treat "the new one is much simpler" as a flag to look harder, not as confirmation.
+- **Long-lived docs hold durable facts only.** CLAUDE.md files, guidelines, and onboarding docs get no transient state — no migration status, no "currently uses X", no dates. Anything that will be false in a month doesn't belong there.
+
+---
+
+## Framework Pitfalls (Always Apply)
+
+- **`whenLoaded()`/`when()` omit the key** — the key is never present with `null`. Model such fields as optional (not `required`, no nullable union) in API schemas. When picking the first of a loaded collection, guard with `isEmpty() ? null : Resource::make(...)` — `Resource::make(null)` fatals on the first method call.
+
+---
+
 ## Default Conventions for New Projects
 
 > Use these when there is no existing pattern to follow. Do not impose these on legacy projects.
@@ -85,7 +103,8 @@ Before opening a PR, run `/review-code` and `/review-security`. Ensure all tests
 ### Architecture
 
 - **Services**: `readonly` classes with constructor injection. All business logic lives here. Controllers, jobs, and commands are thin layers that accept input and delegate to services.
-- **Repositories**: Only for complex, multi-line queries. Extend `AbstractRepository` from `chiiya/laravel-utilities`. Simple Eloquent queries go directly where they're needed.
+- **Dependency injection**: Constructor injection everywhere — except in Laravel classes we extend (Artisan commands, framework-constructed jobs), where dependencies go in the `handle()` signature instead of a boilerplate `__construct` override.
+- **Repositories**: Only for complex, multi-line queries. Extend `AbstractRepository` from `chiiya/laravel-utilities`. Simple Eloquent queries go directly where they're needed. When a private query helper in a service drops to a single caller, move the complete query — filters, eager loads, and the terminal `->get()` — into the repository and return the executed result, not a Builder.
 - **Pipelines**: For sequential multi-step processes. The pipeline class extends `Illuminate\Pipeline\Pipeline` with an array of pipe classes, each implementing `handle($data, Closure $next): mixed`.
 - **Controllers**: Thin. Accept input via Form Request, delegate to service, return response.
 - **Presenters**: For view presentation logic, extend `Chiiya\Common\Presenter\Presenter`.
@@ -110,6 +129,18 @@ Check `composer.json` for `nwidart/laravel-modules`. If present, it's a module p
 
 **Module project**: `app/{Module}/Models/`, `app/{Module}/Services/`, `app/{Module}/Tests/Feature/`, etc. Always add code to the correct module. Use `php artisan module:make-*` to scaffold.
 
+### API Design
+
+- Serialize timestamps as ISO 8601 UTC (`toIso8601String()`) — never `_local`/timezone-shifted variants; the frontend localizes.
+- Query parameters for filtering/sorting use spatie/laravel-query-builder syntax (`filter[x]=value`) — never raw params like `?archived=1`. Split orthogonal concerns into separate filters.
+- Prefer flat URLs (`/v2/items/{uuid}`) over nested ones when the child identifier is globally unique. Only nest when the parent is genuinely required for resolution.
+- Group actions on the same resource into one multi-method controller; reserve invokable single-action controllers for truly standalone operations (webhooks, one-off commands).
+- Reusable resource schemas live in their own JSON files and are `$ref`'d — never inlined as `$defs`. The item schema carries the `examples`; index/wrapper schemas only declare the `data` array.
+
+### Filament
+
+- **Filament closures bind parameters by name.** Unrecognized names fall through to `app()->make($type)` — `Builder $q` silently yields an empty Builder with no model. Always use the documented names (`$query`, `$record`, `$state`, `$value`, `$data`, `$get`, `$set`, `$livewire`) in evaluator-resolved closures.
+
 ### Testing
 
 - **Pest** syntax (`it('...', function () { ... })`), not PHPUnit class syntax.
@@ -117,6 +148,8 @@ Check `composer.json` for `nwidart/laravel-modules`. If present, it's a module p
 - Use factories — never create models manually in tests.
 - Cover: happy path, validation failures, authorization, at least one edge case.
 - Use `Queue::fake()`, `Notification::fake()`, `Event::fake()` for side effects.
+- Test through real entry points (HTTP, jobs, commands) — don't write pseudo-unit tests that resolve a service from the container and assert side effects. When logic moves into a service, extend the existing tests of its callers instead.
+- Cover Mailable rendering by triggering the real flow with `Mail::fake()` and calling `$mail->render()` inside the `Mail::assertSent()` closure — no standalone hand-constructed mail tests.
 
 ### Linting & Quality
 

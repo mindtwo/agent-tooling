@@ -4,7 +4,8 @@ Shared Claude Code tooling for the team. Installs skills, conventions, and hooks
 
 ## What's included
 
-- **Skills** — `/review-code`, `/review-security`, `/generate-pr`, `/handoff`, `/session-summary`, `/clickup-plans`, `/clickup-interview`
+- **Skills** — `/review-security`, `/generate-pr`, `/handoff`, `/session-summary`, `/clickup-plans`, `/clickup-interview`
+- **Plugins** — [`mindtwo-review`](https://github.com/mindtwo/claude-plugins/tree/main/plugins/mindtwo-review) from the mindtwo marketplace: `/mindtwo-review:review-code` and `/mindtwo-review:resolve-findings`
 - **CLAUDE.md** — Team conventions (code philosophy, architecture patterns, security rules) installed at `~/.claude/CLAUDE.md`, applying to all projects
 - **Hooks** — SessionStart update checker, and a PostToolUse nudge to publish finished plans to ClickUp
 
@@ -30,6 +31,13 @@ skills/clickup-plans/scripts/clickup-plan-hook.test.sh
 
 The PostToolUse hook only reaches these scripts via `install.sh`. The npx path installs
 skills but no hooks, so plans there need publishing by invoking the skill directly.
+
+## Code review
+
+`install.sh` installs the `mindtwo-review` plugin through the `claude` CLI (the private
+`mindtwo/claude-plugins` marketplace needs GitHub access via SSH or `gh auth setup-git`).
+With the npx path, install it manually: `/plugin marketplace add mindtwo/claude-plugins`,
+then `/plugin install mindtwo-review@mindtwo-marketplace`.
 
 ## Install
 

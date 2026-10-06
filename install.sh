@@ -22,6 +22,9 @@ HOOKS_SRC="$REPO_DIR/hooks.json"
 BIN_DIR="$HOME/.local/bin"
 BIN_LINK="$BIN_DIR/agent-tooling"
 LAST_FETCH_FILE="$CLAUDE_DIR/.agent-tooling-last-fetch"
+MARKETPLACE_NAME="mindtwo-marketplace"
+MARKETPLACE_REPO="mindtwo/claude-plugins"
+PLUGIN="mindtwo-review@$MARKETPLACE_NAME"
 
 GREEN="\033[0;32m"
 YELLOW="\033[1;33m"
@@ -52,6 +55,10 @@ check_prereqs() {
     if ! command -v git &>/dev/null; then
         err "git not found."
         failed=1
+    fi
+
+    if ! command -v claude &>/dev/null; then
+        warn "claude CLI not found — plugins will need a manual install."
     fi
 
     [[ $failed -eq 0 ]]
@@ -89,6 +96,52 @@ install_skills() {
     done
 
     if [[ $changed -eq 0 ]]; then ok "Skills up to date"; fi
+}
+
+# review-code moved into the mindtwo-review plugin. Runs before install_skills, so the marker
+# only exists when an earlier agent-tooling install put the skill there.
+remove_retired_skills() {
+    [[ -f "$SKILLS_DST/.managed-by-agent-tooling" && -d "$SKILLS_DST/review-code" ]] || return 0
+    rm -rf "$SKILLS_DST/review-code"
+    ok "Removed skill review-code (now the mindtwo-review plugin)"
+}
+
+# ── Plugins ──────────────────────────────────────────────────────────────────
+
+plugin_installed() {
+    jq -e --arg id "$PLUGIN" 'any(.[]; .id == $id)' <<<"$(claude plugin list --json 2>/dev/null || echo '[]')" >/dev/null
+}
+
+install_plugins() {
+    if ! command -v claude &>/dev/null; then
+        warn "Install manually: /plugin marketplace add $MARKETPLACE_REPO, then /plugin install $PLUGIN"
+        return 0
+    fi
+
+    local output marketplaces
+    marketplaces="$(claude plugin marketplace list --json 2>/dev/null || echo '[]')"
+    if ! jq -e --arg n "$MARKETPLACE_NAME" --arg r "$MARKETPLACE_REPO" \
+        'any(.[]; .name == $n and .repo == $r)' <<<"$marketplaces" >/dev/null; then
+        if ! output="$(claude plugin marketplace add "$MARKETPLACE_REPO" 2>&1)"; then
+            warn "Could not add marketplace $MARKETPLACE_REPO (GitHub access via SSH or \`gh auth setup-git\`?): $output"
+            return 0
+        fi
+        ok "Added marketplace: $MARKETPLACE_REPO"
+    elif ! output="$(claude plugin marketplace update "$MARKETPLACE_NAME" 2>&1)"; then
+        warn "Could not refresh marketplace $MARKETPLACE_NAME: $output"
+    fi
+
+    if plugin_installed; then
+        if output="$(claude plugin update "$PLUGIN" 2>&1)"; then
+            ok "Plugin up to date: $PLUGIN"
+        else
+            warn "Could not update plugin $PLUGIN: $output"
+        fi
+    elif output="$(claude plugin install "$PLUGIN" 2>&1)"; then
+        ok "Installed plugin: $PLUGIN"
+    else
+        warn "Could not install plugin $PLUGIN: $output"
+    fi
 }
 
 # ── CLAUDE.md ────────────────────────────────────────────────────────────────
@@ -192,7 +245,9 @@ cmd_install() {
 
     check_prereqs || { echo ""; err "Fix the above issues and re-run."; exit 1; }
 
+    remove_retired_skills
     install_skills
+    install_plugins
     install_claude_md
     install_hooks
     install_symlink
@@ -238,6 +293,15 @@ cmd_status() {
             ok "$skill_name"
         fi
     done
+
+    # Plugins
+    echo ""
+    echo "Plugins:"
+    if command -v claude &>/dev/null && plugin_installed; then
+        ok "$PLUGIN"
+    else
+        err "Not installed: $PLUGIN (run \`agent-tooling update\`)"
+    fi
 
     # CLAUDE.md
     echo ""
@@ -295,7 +359,7 @@ cmd_status() {
 cmd_uninstall() {
     echo -e "\n${BOLD}agent-tooling uninstall${RESET}\n"
 
-    read -r -p "  Remove installed skills, CLAUDE.md, and symlink? [y/N] " confirm
+    read -r -p "  Remove installed skills, plugins, CLAUDE.md, and symlink? [y/N] " confirm
     [[ "$confirm" =~ ^[Yy]$ ]] || { info "Aborted."; exit 0; }
 
     # Remove skills installed by this tool
@@ -310,6 +374,16 @@ cmd_uninstall() {
     done
 
     rm -f "$SKILLS_DST/.managed-by-agent-tooling"
+
+    if ! command -v claude &>/dev/null; then
+        warn "claude CLI not found — remove the plugin manually: /plugin uninstall $PLUGIN"
+    elif plugin_installed; then
+        if output="$(claude plugin uninstall "$PLUGIN" 2>&1)"; then
+            ok "Removed plugin: $PLUGIN"
+        else
+            warn "Could not remove plugin $PLUGIN: $output"
+        fi
+    fi
 
     # Remove CLAUDE.md
     if [[ -f "$CLAUDE_MD_DST" ]]; then

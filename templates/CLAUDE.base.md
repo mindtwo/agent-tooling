@@ -78,7 +78,7 @@ These rules apply to every project regardless of age or architecture.
 
 ## Code Review (Always Apply)
 
-Before opening a PR, run `/review-code` and `/review-security`. Ensure all tests pass and linting passes (using whatever tool the project uses).
+Before opening a PR, run `/mindtwo-review:review-code` (then `/mindtwo-review:resolve-findings`) and `/review-security`. Ensure all tests pass and linting passes (using whatever tool the project uses).
 
 ---
 

@@ -4,7 +4,7 @@ Shared Claude Code tooling for the team. Installs skills, conventions, and hooks
 
 ## What's included
 
-- **Skills** — `/review-code`, `/review-security`, `/generate-pr`, `/handoff`, `/session-summary`, `/clickup-plans`, `/clickup-interview`, plus `mindtwo-branding` (auto-activates when styling client- or team-facing deliverables such as Artifacts, reports, and PDF templates with the mindtwo corporate identity)
+- **Skills** — `/review-code`, `/review-security`, `/generate-pr`, `/handoff`, `/session-summary`, `/clickup-plans`, `/clickup-interview`, `/clickup-test-protocol`, plus `mindtwo-branding` (auto-activates when styling client- or team-facing deliverables such as Artifacts, reports, and PDF templates with the mindtwo corporate identity)
 - **CLAUDE.md** — Team conventions (code philosophy, architecture patterns, security rules) installed at `~/.claude/CLAUDE.md`, applying to all projects
 - **Hooks** — SessionStart update checker, and a PostToolUse nudge to publish finished plans to ClickUp
 
@@ -14,6 +14,9 @@ Shared Claude Code tooling for the team. Installs skills, conventions, and hooks
 review and implementation, and folds colleague feedback back into the spec.
 `clickup-interview` parks clarification questions during planning and sends them to the
 ticket author as one comment.
+`clickup-test-protocol` writes a German test protocol for a finished ticket, one block per
+task/DoD item with a cropped screenshot of each change, and posts it as a ticket comment
+only after the draft has been reviewed and approved.
 
 Both are installed globally — a repo opts in with a single committed
 `.claude/clickup-plans.json`, written by the skill's `setup` workflow. A guard script
